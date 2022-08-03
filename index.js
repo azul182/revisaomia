@@ -16,14 +16,24 @@ app.listen(666,()=>{
 const mongoose = require('mongoose')
 //configurar o script de conexão 
 const conexao = ()=>{
-    mongoose.connect('mongodb+srv://userRevisao:thi020206@cluster0.s3hds.mongodb.net/?retryWrites=true&w=majority')
+    mongoose.connect('mongodb+srv://userRevisao:thi020206@cluster0.s3hds.mongodb.net/revisao?retryWrites=true&w=majority')
 }
-
+//configurar o modelo para a coleção alunos
+const modelo = new mongoose.Schema({
+    nome:String,
+    turma:String,
+    disciplina:String
+})
+//definir o modelo para a coleção alunos
+const alunos = mongoose.model('alunos',modelo)
 /*configuração do banco de dados -fim */
 
 /* rota para a requisição / */
-app.get('/',(req,res)=>{
+app.get('/',async(req,res)=>{
     conexao()
+    //pesquisar os documentos na collection alunos 
+    const resultado = await alunos.find()
+    console.log(resultado)
     //res.send('Funcionando')
-    res.render('index.ejs',{nome:"Alunos Feiosos", turma:"2EMIA", disciplina:"LP2"})
+    res.render('index.ejs',{resultado})
 })
